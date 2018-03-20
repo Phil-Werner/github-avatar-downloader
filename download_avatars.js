@@ -18,9 +18,6 @@ function getRepoContributors(repoOwner, repoName, cb) {
 
     dataObj = JSON.parse(body);
 
-    //console.log(dataObj);
-
-
     cb(err, dataObj);
   });
 }
@@ -28,27 +25,27 @@ function getRepoContributors(repoOwner, repoName, cb) {
 function downloadImageByURL(url, filePath) {
 
   request.get(url).on('error', function(err) {
-
     throw err;
   })
   .pipe(fs.createWriteStream('./' + filePath));
 }
 
-
-
-// getRepoContributors("jquery", "jquery", function(err, result) {
-//   console.log("Errors:", err);
-
-//   console.log(result.length);
-
-//   for (var x = 0; x < result.length; x++) {
-
-//     console.log(result[x]['avatar_url']);
-
-//   }
-
-// });
-
 console.log("Welcome to the GitHub Avatar Downloader");
 
-downloadImageByURL("https://avatars2.githubusercontent.com/u/2741?v=3&s=466", "avatars/kvirani.jpg")
+var args = process.argv.slice(2);
+
+if (args[0] && args[1]) {
+
+  getRepoContributors(args[0], args[1], function(err, result) {
+    console.log("Errors:", err);
+
+    for (var x = 0; x < result.length; x++) {
+      downloadImageByURL(result[x]['avatar_url'], 'avatars/' + result[x]['login'] + '.jpg');
+    }
+  });
+}
+
+else {
+
+  console.log("Unable to comply.  You must enter two command line arguments.  Quitting!")
+}
