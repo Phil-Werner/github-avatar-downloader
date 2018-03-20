@@ -1,4 +1,6 @@
-# Logs
+secrets.js
+
+# Log
 logs
 *.log
 npm-debug.log*
